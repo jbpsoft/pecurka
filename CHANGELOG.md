@@ -1,168 +1,216 @@
-Version 0.9.5 (23.07.2014)
---------------------------
+## v1.3.1 (2016-05-18)
 
-**This is the last release on the 0.9 branch.**
+- Normalizer fixes from @gitlost
+- fix tests for php 5.5.35/5.6.21/7.0.6
 
-* Add `NodeTraverser::removeVisitor()` method, which removes a visitor from the node traverser. The method was not added
-  to the corresponding `NodeTraverserInterface` to avoid BC breaks with custom traversers (it is added in version 1.0).
+## v1.3.0 (2015-12-15)
 
-* Deprecated `PHPParser_Template` and `PHPParser_TemplateLoader`. This functionality does not belong in the main project
-  and - as far as I know - nobody is using it.
+- add shim for mb_convert_variables
+- marked all shims as @internal
+- test on appveyor
+- a few fixes in iconv and mbstring shims
+- cleanup refacto for preparing v2 based on symfony-polyfill
 
-* Fix alias resolution in `NameResolver`: Class names are now correctly handled as case-insensitive.
+## v1.2.6 (2015-12-15)
 
-* The undefined variable error, which is used in the lexer to reset the error state, will no longer interfere with
-  custom error handlers.
+- fix compat with symfony-polyfill
 
-* Make lexer compatible with `xdebug.scream`.
+## v1.2.5 (2015-10-14)
 
-Version 0.9.4 (25.08.2013)
---------------------------
-* [PHP 5.5] Add support for `ClassName::class`. This is parsed as an `Expr_ClassConstFetch` with `'class'` being the
-  constant name.
+- handle the third argument of mb_convert_encoding() being an array
+- add license files
 
-* Syntax errors now include information on expected tokens and mimic the format of PHP's own (pre 5.4) error messages.
-  Example:
+## v1.2.4 (2015-06-29)
 
-        Old: Unexpected token T_STATIC on line 1
-        New: Syntax error, unexpected T_STATIC, expecting T_STRING or T_NS_SEPARATOR or '{'
+- trigger silenced deprecation notices when shims are in use
+- fix mb_strrpos() shim registration
+- fix .gitattributes
 
-* `PHPParser_PrettyPrinter_Zend` was renamed to `PHPParser_PrettyPrinter_Default` as the default pretty printer only
-  very loosely applies the Zend Coding Standard. The class `PHPParser_PrettyPrinter_Zend` extends
-  `PHPParser_PrettyPrinter_Default` to maintain backwards compatibility.
+## v1.2.3 (2015-06-25)
 
-* The pretty printer now prints namespaces in semicolon-style if possible (i.e. if the file does not contain a global
-  namespace declaration).
+- fix mb_strrpos shim with negative offset
+- sync tests with latest PHP/HHVM behaviors
+- remove PHP7/HHVM from allowed failures
+- move to PSR-1+2+4
+- mv class/ src/
 
-* Added `prettyPrintFile(array $stmts)` method which will pretty print a file of statements including the opening
-  `<?php` tag if it is required. Use of this method will also eliminate the unnecessary `<?php ?>` at the start and end
-  of files using inline HTML.
+## v1.2.2 (2015-04-26)
 
-* There now is a builder for interfaces (`PHPParser_Builder_Interface`).
+- Fix ucwords to be functionally the same as in-built PHP version
+- Fix iconv_set_encoding deprecation notice in PHP 5.6.0
+- remove legacy test for HHVM/PHP7
+- mb_parse_str() should have no return value
 
-* An interface for the node traversation has been added: `PHPParser_NodeTraverserInterface`
+## v1.2.1 (2015-01-28)
 
-* Fix pretty printing of `include` expressions (precedence information was missing).
+- fix double declaration in mbstring shim
 
-* Fix "undefined index" notices when generating the expected tokens for a syntax error.
+## v1.2.0 (2015-01-12)
 
-* Improve performance of `PrettyPrinter` construction by no longer using the `uniqid()` function.
+- add u::strwidth() to get the width of a string when printed on a terminal
+- add more mbstring shims
+- add a note about https://bugs.php.net/65358
+- fail properly when COM is not loaded
+- fallback on stat() when lstat() fails
 
-Version 0.9.3 (22.11.2012)
---------------------------
+## v1.2.0-beta (2014-08-05)
 
-* [BC] As `list()` in `foreach` is now supported the structure of list assignments changed:
+- add best-fit mappings for UTF-8 to Code Page approximations
+- add portable Unicode filesystem access under Windows and other OSes
 
-   1. There is no longer a dedicated `AssignList` node; instead a normal `Assign` node is used with a `List` as  `var`.
-   2. Nested lists are now `List` nodes too, instead of just arrays.
+## v1.1.31 (2015-12-15)
 
-* [BC] As arbitrary expressions are allowed in `empty()` now its subnode was renamed from `var` to `expr`.
+- fix compat with symfony-polyfill
 
-* [BC] The protected `pSafe()` method in `PrettyPrinterAbstract` was renamed to `pNoIndent()`.
+## v1.1.30 (2015-06-29)
 
-* [PHP 5.5] Add support for arbitrary expressions in `empty()`.
+- fix mb_strrpos shim with negative offset
 
-* [PHP 5.5] Add support for constant array / string dereferencing.
-  Examples: `"foo"[2]`, `[1, 2, 3][2]`
+## v1.1.29 (2015-04-26)
 
-* [PHP 5.5] Add support for `yield` expressions. This adds a new `Yield` expression type, with subnodes `key` and
-  `value`.
+- fix ucwords to be functionally the same as in-built PHP version
+- fix iconv_set_encoding deprecation notice in PHP 5.6.0
+- remove legacy test for HHVM/PHP7
 
-* [PHP 5.5] Add support for `finally`. This adds a new `finallyStmts` subnode to the `TryCatch` node. If there is no
-  finally clause it will be `null`.
+## v1.1.28 (2015-01-12)
 
-* [PHP 5.5] Add support for `list()` destructuring of `foreach` values.
-  Example: `foreach ($coords as list($x, $y)) { ... }`
+- fix mbstring shim for html-entities
 
-* Improve pretty printing of expressions by printing less unnecessary parentheses. In particular concatenations are now
-  printed as `$a . $b . $c . $d . $e` rather than `$a . ($b . ($c . ($d . $e)))`. This is implemented by taking operator
-  associativity into account. New protected methods added to the pretty printer are `pPrec()`, `pInfixOp()`,
-  `pPrefixOp()` and `pPostfixOp()`. This also fixes an issue with extraneous parentheses in closure bodies.
+## v1.1.27 (2015-01-11)
 
-* Fix formatting of fall-through `case` statements in the Zend pretty printer.
+- update to Unicode 7.0
+- fix iconv shim compat layer
 
-* Fix parsing of `$foo =& new Bar`. It is now properly parsed as `AssignRef` (instead of `Assign`).
+## v1.1.26 (2014-11-08)
 
-* Fix assignment of `$endAttributes`. Sometimes the attributes of the token right after the node were assigned, rather
-  than the attributes of the last token in the node.
+- tweak composer.json
 
-* `rebuildParser.php` is now designed to be run from the command line rather than from the browser.
+## v1.1.25 (2014-08-05)
 
-Version 0.9.2 (07.07.2012)
---------------------------
+- update travis matrix
+- add composer branch alias
 
-* Add `Class->getMethods()` function, which returns all methods contained in the `stmts` array of the class node. This
-  does not take inherited methods into account.
+## v1.1.24 (2014-06-17)
 
-* Add `isPublic()`, `isProtected()`, `isPrivate()`. `isAbstract()`, `isFinal()` and `isStatic()` accessors to the
-  `ClassMethod`, `Property` and `Class` nodes. (`Property` and `Class` obviously only have the accessors relevant to
-  them.)
+- update tests for latest HHVM fixes
+- move legacy GRAPHEME_CLUSTER_RX version to Intl shim
 
-* Fix parsing of new expressions in parentheses, e.g. `return(new Foo);`.
+## v1.1.23 (2014-05-22)
 
-* [BC] Due to the below changes nodes now optionally accept an `$attributes` array as the
-  last parameter, instead of the previously used `$line` and `$docComment` parameters.
+- enable tests for PHP 5.6
+- remove HHVM from allowed failures
 
-* Add mechanism for adding attributes to nodes in the lexer.
+## v1.1.22 (2014-05-06)
 
-  The following attributes are now added by default:
+- fix #19: don't call ini_set() when not required and gain compat with PHP5.6
 
-   * `startLine`: The line the node started in.
-   * `endLine`: The line the node ended in.
-   * `comments`: An array of comments. The comments are instances of `PHPParser_Comment`
-     (or `PHPParser_Comment_Doc` for doc comments).
+## v1.1.21 (2014-03-26)
 
-  The methods `getLine()` and `setLine()` still exist and function as before, but internally
-  operator on the `startLine` attribute.
+- fix #18 u::wordwrap() now relies on native behavior
 
-  `getDocComment()` also continues to exist. It returns the last comment in the `comments`
-  attribute if it is a doc comment, otherwise `null`. As `getDocComment()` now returns a
-  comment object (which can be modified using `->setText()`) the `setDocComment()` method was
-  removed. Comment objects implement a `__toString()` method, so `getDocComment()` should
-  continue to work properly with old code.
+## v1.1.20 (2014-03-01)
+## v1.1.19 (2014-03-01)
 
-* [BC] Use inject-once approach for lexer:
+- fix mb_regex_encoding() being disabled on some hosting providers
 
-  Now the lexer is injected only once when creating the parser. Instead of
+## v1.1.18 (2014-02-02)
 
-        $parser = new PHPParser_Parser;
-        $parser->parse(new PHPParser_Lexer($code));
-        $parser->parse(new PHPParser_Lexer($code2));
+- require PCRE>=7.3, the first that correctly checks UTF-8 validity
+- enable HHVM on Travis CI
 
-  you write:
+## v1.1.17 (2014-01-02)
 
-        $parser = new PHPParser_Parser(new PHPParser_Lexer);
-        $parser->parse($code);
-        $parser->parse($code2);
+- enable Travis CI and SensioLabsInsight
+- add shims for mb_check_encoding, mb_detect_encoding, mb_detect_order,
+  mb_language and mb_encoding_aliases
+- mbstring shim fix: alias UTF8 to UTF-8
+- more tests
 
-* Fix `NameResolver` visitor to also resolve class names in `catch` blocks.
+## v1.1.16 (2013-12-06)
 
-Version 0.9.1 (24.04.2012)
---------------------------
+- fix $_FILES bootup filtering
+- fix mbstring shim behavior with invalid utf8 strings
 
-* Add ability to add attributes to nodes:
+## v1.1.15 (2013-11-23)
 
-  It is now possible to add attributes to a node using `$node->setAttribute('name', 'value')` and to retrieve them using
-  `$node->getAttribute('name' [, 'default'])`. Additionally the existance of an attribute can be checked with
-  `$node->hasAttribute('name')` and all attributes can be returned using `$node->getAttributes()`.
+- u::toAscii() is now locale sensitive and allows a substitution character
+- use LSB for more extension openness
+- handle null for mb_substr() shim length as in PHP 5.4.8
+- fix casts to string
+- fix mbstring MB_CASE_TITLE shim on edge case
+- small optimizations
+- add a changelog
 
-* Add code generation features: Builders and templates.
+## v1.1.14 (2013-11-04)
 
-  For more infos, see the [code generation documentation][1].
+- set default_charset to UTF-8 at bootup
+- remove bootup PCRE warning
+- fix iconv internal_encoding shim
+- fix bootup dependencies
+- add tests for normalizers consts
+- readme update
 
-* [BC] Don't traverse nodes merged by another visitor:
+## v1.1.13 (2013-10-11)
 
-  If a NodeVisitor returns an array of nodes to merge, these will no longer be traversed by all other visitors. This
-  behavior only caused problems.
+- new u::filter(): normalizes to UTF-8 NFC, converting from CP-1252 when needed
+- new u::json_decode(), u::filter_input() and u::filter_input_array() for NFC safeness
+- reference Unicode 6.3
+- more tests
+- readme update
 
-* Fix line numbers for some list structures.
-* Fix XML unserialization of empty nodes.
-* Fix parsing of integers that overflow into floats.
-* Fix emulation of NOWDOC and binary floats.
+## v1.1.12 (2013-10-03)
 
-Version 0.9.0 (05.01.2012)
---------------------------
+- new Patchwork\TurkishUtf8 class extends Patchwork\Utf8 with Turkish specifics
+- expose Patchwork\Utf8\Bootup::filterString() for UF-8 NFC strings normalization
+- normalize inputs EOL to work around https://bugs.php.net/65732
+- update composer.json
 
-First version.
+## v1.1.11 (2013-08-19)
 
- [1]: https://github.com/nikic/PHP-Parser/blob/master/doc/3_Code_generation.markdown
+- updates related to PHP bugs 52211 and 61860
+- fixes and tests for iconv shim
+- fixes and tests for mbstring shim
+
+## v1.1.10 (2013-08-13)
+
+- update .gitattributes export-ignore
+- fixes and tests for intl::grapheme_extract() shim
+- fixes and tests for iconv shim
+- fixes and tests for mbstring shim
+
+## v1.1.9 (2013-08-04)
+
+- know that PHP bug 61860 has been fixed in 5.5.1
+- fix intl::grapheme_strlen() shim on edge case
+- fix case sensitive encoding checks for mbstring shim
+- some more fixes, tests and optimizations
+
+## v1.1.8 since v1.1.0 (2013-05-24)
+
+- filter leading combining chars in inputs for NFC safeness
+- fixes, tests and optimizations
+- readme update
+
+## v1.1.0 (2013-04-18)
+
+- PSR-0 autoloading and explicit bootup configuration is now required
+
+## v1.0.6 since v1.0.0 (2013-04-22)
+
+- add extra characters for ASCII transliterations
+- move bootup stages in namespaced functions for greater modularity
+- NFC normalization for autoglobal inputs
+- better setlocale() initialization
+- fix fatal error caused by multiple bootup inclusion
+- fix bootup
+
+## v1.0.0 (2012-10-15)
+
+- first official release of a work started in 2007
+- Apache v2.0 / GPL v2.0 dual-licensed
+- PHP portability implementations for mbstring, iconv, intl grapheme_*() and utf8_encode/decode()
+- Unicode compliant and portable Normalizer
+- grapheme clusters aware UTF-8 handling string functions replica
+- PHP runtime environment configuration for UTF-8
+- extra functions for UTF-8 validity checks, transliterations and case folding
+- covered by unit tests
