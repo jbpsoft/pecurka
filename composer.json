@@ -1,28 +1,37 @@
 {
-    "name": "predis/predis",
+    "name": "swiftmailer/swiftmailer",
     "type": "library",
-    "description": "Flexible and feature-complete PHP client library for Redis",
-    "keywords": ["nosql", "redis", "predis"],
-    "homepage": "http://github.com/nrk/predis",
+    "description": "Swiftmailer, free feature-rich PHP mailer",
+    "keywords": ["mail","mailer","email"],
+    "homepage": "https://swiftmailer.symfony.com",
     "license": "MIT",
     "authors": [
         {
-            "name": "Daniele Alessandri",
-            "email": "suppakilla@gmail.com",
-            "homepage": "http://clorophilla.net"
+            "name": "Chris Corbyn"
+        },
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
         }
     ],
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=5.3.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0"
-    },
-    "suggest": {
-        "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol",
-        "ext-curl": "Allows access to Webdis when paired with phpiredis"
+        "mockery/mockery": "~0.9.1",
+        "symfony/phpunit-bridge": "~3.2"
     },
     "autoload": {
-        "psr-0": {"Predis": "lib/"}
+        "files": ["lib/swift_required.php"]
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Swift_": "tests/unit"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "5.4-dev"
+        }
     }
 }
